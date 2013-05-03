@@ -28,7 +28,10 @@ var updateText = function(inputElement, chatId) {
 
 var generateIconSpot = function(iconSpot, chatId) {
 	var element = document.createElement('input');
-	element.setAttribute('style', 'width:15px; height:22px; border:0px; background-color:transparent');
+	var elementStyle = 'width:15px; height:22px; border:0px; ' +
+		'background-color:transparent; float:left;';
+
+	element.setAttribute('style', );
 	element.setAttribute('id', 'mic_' + chatId);
 	element.setAttribute('x-webkit-speech', '');
 	element.addEventListener('webkitspeechchange', function(evt) {
