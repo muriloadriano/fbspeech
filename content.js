@@ -1,15 +1,15 @@
+// Helper used to see if an element implements a class
 function hasClass(element, cls) {
 	return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// This variable holds the container of the chat windows
 var fbDockChat;
-var chatId = 0;
 
-var chatWindowOpenHandler = function(element) {
-	alert('Abriu chat: ' + a.href);
-}
+// Used for giving IDs for the chat windows
+var chatId = 0;
 
 var getTextArea = function(element) {
 	return element.getElementsByTagName('textarea')[0];
@@ -19,14 +19,8 @@ var getIconSpot = function(element) {
 	return element.getElementsByClassName('_552n')[0];
 }
 
-var updateText = function(inputElement, chatId) {
-	var txtArea = fbDockChat.getElementById('fbspeech_' + chatId);
-	txtArea.value = inputElement.value;
-	inputElement.value = '';
-	txtArea.focus();
-}
-
 var generateIconSpot = function(iconSpot, chatId) {
+	// Creates the microphone input and appends it to the chat DOM
 	var element = document.createElement('input');
 	var elementStyle = 'width:15px; height:22px; border:0px; ' +
 		'background-color:transparent; float:left;';
@@ -69,11 +63,13 @@ var updateChatActions = function() {
 var init = function() {
 	fbDockChat = document.getElementById('fbDockChat');
 
+	// If the chat dock wasn't fully loaded, try again in 500 msecs
 	if (!fbDockChat) {
 		setTimeout(init, 500);
 		return;
 	}
 
+	// Listens for node insertions on chat dock DOM to search for a new chat
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
  		updateChatActions();
  	});
