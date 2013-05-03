@@ -1,0 +1,12 @@
+{
+	"manifest_version": 2,
+
+	"name": "Facebook Speech",
+	"description": "This extension enables speech recognition for some Facebook functionalities.",
+	"version": "1.0",
+
+	"browser_action": {
+		"default_icon": "icon.png",
+		"default_popup": "config.html"
+	}
+}
