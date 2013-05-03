@@ -21,20 +21,26 @@ var getIconSpot = function(element) {
 
 var generateIconSpot = function(iconSpot, chatId) {
 	// Creates the microphone input and appends it to the chat DOM
+
+	var txtArea = document.getElementById('fbspeech_' + chatId);
+
 	var element = document.createElement('input');
 	var elementStyle = 'width:15px; height:22px; border:0px; ' +
 		'background-color:transparent; float:left;';
 
-	element.setAttribute('style', );
+	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_' + chatId);
 	element.setAttribute('x-webkit-speech', '');
 	element.addEventListener('webkitspeechchange', function(evt) {
-		var txtArea = document.getElementById('fbspeech_' + chatId);
 		txtArea.value += evt.results[0].utterance + ' ';
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
 	});
+
+	element.onfocus = function() {
+		txtArea.focus();
+	}
 
 	iconSpot.insertBefore(element, iconSpot.childNodes[0]);
 }
