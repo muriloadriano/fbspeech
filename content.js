@@ -143,7 +143,7 @@ var generateGraphSearchMicInput = function(richInput) {
 		$(richInput).attr('aria-expanded', 'true');
 		$(richInput).attr('aria-activedescendant', 'js_47');
 
-
+		dispatchAKeyEvent(richInput);
 
 		console.log($(outputSpan));
 		evt.srcElement.value = '';
