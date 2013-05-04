@@ -118,19 +118,31 @@ var generateGraphSearchMicInput = function(richInput) {
 	element.setAttribute('id', 'mic_comment_' + commentId);
 	element.setAttribute('x-webkit-speech', '');
 	element.addEventListener('webkitspeechchange', function(evt) {
-		var outputSpan = richInput.children[0];
+		var outputSpan = null;
+
+		if (richInput.children) {
+			outputSpan = richInput.children[0];
+
+			if (outputSpan && outputSpan.tagName != 'span') {
+				outputSpan = null;
+			}
+		}
 
 		if (!outputSpan) {
 			outputSpan = document.createElement('span');
-			outputSpan['data-si'] = 'true';
-			outputSpan['style'] = '';
+			outputSpan.setAttribute('data-si', 'true');
 			richInput.appendChild(outputSpan);
+			console.log(outputSpan);
 		}
 
-		outputSpan.value += evt.results[0].utterance + ' ';
-		outputSpan.focus();
-		outputSpan.selectionStart = outputSpan.selectionEnd =
-			outputSpan.value.length;
+		outputSpan.innerHTML += evt.results[0].utterance + ' ';
+
+		$(richInput).attr('aria-expanded', 'true');
+		$(richInput).attr('aria-activedescendant', 'js_47');
+
+
+
+		console.log($(outputSpan));
 		evt.srcElement.value = '';
 	});
 
@@ -170,8 +182,14 @@ var updateCommentActions = function() {
 			}
 			else {
 				// Graph Search input
-				var richInput =
-					document.getElementsByClassName('structuredRich')[0];
+				var richInput = $('.structuredRich:first', $(elms[i])).get();
+					//elms[i].getElementsByClassName('structuredRich')[0];
+
+				if (!richInput.length) return;
+
+				richInput = richInput[0];
+				//var inputArea = $('input[name=q]',
+				//	$(txtArea.children[0])).get()[0];
 
 				var micInput = generateGraphSearchMicInput(richInput);
 
