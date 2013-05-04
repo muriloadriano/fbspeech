@@ -1,8 +1,6 @@
-// Helper used to see if an element implements a class
 function hasClass(element, cls) {
 	return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 // CHAT
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +31,7 @@ var generateIconSpot = function(iconSpot, chatId) {
 	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_' + chatId);
 	element.setAttribute('x-webkit-speech', '');
+
 	element.addEventListener('webkitspeechchange', function(evt) {
 		txtArea.value += evt.results[0].utterance + ' ';
 		txtArea.focus();
@@ -41,6 +40,9 @@ var generateIconSpot = function(iconSpot, chatId) {
 
 		// Scroll textarea
 		txtArea.scrollTop = txtArea.scrollHeight;
+
+		// Dispath a key event in text area
+		dispatchAKeyEvent(txtArea);
 	});
 
 	element.onfocus = function() {
@@ -49,6 +51,7 @@ var generateIconSpot = function(iconSpot, chatId) {
 
 	iconSpot.insertBefore(element, iconSpot.childNodes[0]);
 }
+
 
 var updateChatActions = function() {
 	var elms = fbDockChat.getElementsByClassName('fbNubFlyoutFooter _552j');
