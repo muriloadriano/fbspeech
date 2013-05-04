@@ -39,7 +39,7 @@ var generateIconSpot = function(iconSpot, chatId) {
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
 
-		// Scroll textarea 
+		// Scroll textarea
 		txtArea.scrollTop = txtArea.scrollHeight;
 	});
 
@@ -98,7 +98,7 @@ var generateCommentMicInput = function(txtArea, commentId) {
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
 
-		// Scroll textarea 
+		// Scroll textarea
 		txtArea.scrollTop = txtArea.scrollHeight;
 	});
 
@@ -109,32 +109,30 @@ var generateCommentMicInput = function(txtArea, commentId) {
 	return element;
 }
 
-var generateGraphSearchMicInput = function(outputSpan) {
+var generateGraphSearchMicInput = function(richInput) {
 	var element = document.createElement('input');
 	var elementStyle = 'width:15px; margin:auto 8px; height:30px; border:0px; '
 		+ 'background-color:transparent; float:right;';
-
-	if (!outputSpan) {
-		outputSpan = document.createElement('span');
-		outputSpan['data-si'] = 'true';
-		document.getElementsByClassName('structuredRich')[0]
-			.appendChild(outputSpan);
-	}
 
 	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_comment_' + commentId);
 	element.setAttribute('x-webkit-speech', '');
 	element.addEventListener('webkitspeechchange', function(evt) {
+		var outputSpan = richInput.children[0];
+
+		if (!outputSpan) {
+			outputSpan = document.createElement('span');
+			outputSpan['data-si'] = 'true';
+			outputSpan['style'] = '';
+			richInput.appendChild(outputSpan);
+		}
+
 		outputSpan.value += evt.results[0].utterance + ' ';
 		outputSpan.focus();
 		outputSpan.selectionStart = outputSpan.selectionEnd =
 			outputSpan.value.length;
 		evt.srcElement.value = '';
 	});
-
-	element.onfocus = function() {
-		outputSpan.focus();
-	}
 
 	return element;
 }
@@ -174,10 +172,12 @@ var updateCommentActions = function() {
 				// Graph Search input
 				var richInput =
 					document.getElementsByClassName('structuredRich')[0];
-				richInput.style.float = 'left';
 
-				var outputSpan = richInput.children[0];
-				var micInput = generateGraphSearchMicInput(outputSpan);
+				var micInput = generateGraphSearchMicInput(richInput);
+
+				if (txtArea.children[0]) {
+					txtArea.children[0].style.width = '95%';
+				}
 
 				$(txtArea).prepend(micInput);
 			}
