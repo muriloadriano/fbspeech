@@ -71,7 +71,7 @@ function addMenu(lang, sel_coun) {
 		if( options[lang][i].value == sel_coun ){
 			tag_option.selected = "selected";
 		}
-		
+
 		countries.appendChild(tag_option);
 	}
 }
@@ -107,7 +107,6 @@ function initialize() {
 	$('#languages').change(
 		function() {
 			var lang = $(this).val();
-			//alert( lang + " " + options[lang][0].value );
 			saveLanguage(lang, options[lang][0].value);
 			addMenu(lang, options[lang][0].value);
 		}
@@ -117,7 +116,6 @@ function initialize() {
 		function() {
 			var sel_coun = $(this).val();
 			chrome.storage.local.get(['language'], function(result) {
-				//alert( result.language + " " + sel_coun );
  				saveLanguage( result.language, sel_coun );
  				addMenu(result.language, sel_coun);
 			});

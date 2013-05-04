@@ -2,14 +2,12 @@
 	"manifest_version": 2,
 
 	"name": "Facebook Speech",
-	"description": "This extension enables speech recognition for some Facebook functionalities.",
-	"version": "1.0",
+	"description": "Facebook Speech allows you use your voice to interact with your friends in a very easy and friendly way.",
+	"version": "1.2",
 
 	"permissions": [
-		"tabs",
 		"*://*.facebook.com/*",
-		"storage",
-		"tts"
+		"storage"
 	],
 
 	"content_scripts": [{
