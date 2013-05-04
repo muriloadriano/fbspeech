@@ -24,6 +24,16 @@ var dispatchSimpleEvent = function(target, type, canBubble, cancelable) {
 	target.dispatchEvent(e);
 };
 
+var pressKeyEnterListener = function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        e.preventDefault();
+  		console.log("Prees enter");
+	}
+};
+
+
+
 var dispatchAKeyEvent = function(element) {
 	var canceled = !dispatchKeyboardEvent(element,
 		'keydown', true, true,  // type, bubbles, cancelable
@@ -46,4 +56,24 @@ var dispatchAKeyEvent = function(element) {
 	 	}
 	}
 	dispatchKeyboardEvent(element, 'keyup', true, true, null, 'h', 0, '');
+};
+
+
+// Mouse Events
+function contextMenuClick(element)
+{
+    var evt = element.ownerDocument.createEvent('MouseEvents');
+
+    evt.initMouseEvent('contextmenu', true, true,
+         element.ownerDocument.defaultView, 1, 0, 0, 0, 0, false,
+         false, false, false, 1, null);
+    element.dispatchEvent(evt);
+}
+
+var dispatchMouseEvent = function(target, var_args) {
+ 	var e = document.createEvent("MouseEvents");
+	// If you need clientX, clientY, etc., you can call
+	// initMouseEvent instead of initEvent
+	e.initEvent.apply(e, Array.prototype.slice.call(arguments, 1));
+ 	target.dispatchEvent(e);
 };
