@@ -12,6 +12,9 @@ var fbDockChat;
 // Used for giving IDs for the chat windows
 var chatId = 0;
 
+// A function that will play a beep if desired
+var fbBeep = function () {};
+
 var getTextArea = function(element) {
 	return element.getElementsByTagName('textarea')[0];
 }
@@ -34,8 +37,10 @@ var generateIconSpot = function(iconSpot, chatId) {
 	element.setAttribute('x-webkit-speech', '');
 	element.setAttribute('lang', configs.language);
 	element.className += 'fbspeech_input';
+	element.addEventListener('click', fbBeep);
 
 	element.addEventListener('webkitspeechchange', function(evt) {
+		fbBeep();
 		txtArea.value += evt.results[0].utterance + ' ';
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
@@ -49,6 +54,7 @@ var generateIconSpot = function(iconSpot, chatId) {
 	});
 
 	element.onfocus = function() {
+		fbBeep();
 		txtArea.focus();
 	}
 
@@ -82,11 +88,23 @@ var loadLanguage = function() {
 		configs.language = result.language + '-' + result.country;
 		$('.fbspeech_input').attr('lang', configs.language);
 	});
-}
+};
 
 var loadConfigs = function() {
+	chrome.storage.local.get('beep', function(result) {
+		if (result.beep) {
+			fbBeep = function() {
+				var elm = document.getElementById('fbspeech_audio');
+				elm.play();
+			};
+		}
+		else {
+			fbBeep = function() {};
+		}
+	});
+
 	loadLanguage();
-}
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // COMMENT
@@ -126,6 +144,7 @@ var generateCommentMicInput = function(txtArea, commentId) {
 
 	element.onfocus = function() {
 		txtArea.focus();
+		fbBeep();
 	}
 
 	return element;
@@ -158,6 +177,10 @@ var generateGraphSearchMicInput = function(richInput) {
 
 		evt.srcElement.value = '';
 	});
+
+	element.onfocus = function() {
+		fbBeep();
+	}
 
 	return element;
 }
@@ -244,6 +267,14 @@ var init = function() {
 			$('.fbspeech_input').attr('lang', configs.language);
 		}
 	);
+
+	var audioElement = document.createElement('audio');
+	audioElement.setAttribute('src', 'http://students.ic.unicamp.br/~ra134072/beep.mp3');
+	audioElement.setAttribute('preload', 'auto');
+	audioElement.setAttribute('id', 'fbspeech_audio');
+	audioElement.load();
+
+	document.body.appendChild(audioElement);
 
 	// Initialize the selected language
 	loadConfigs();

@@ -31,6 +31,11 @@ function saveLanguage(lang, count) {
 	chrome.storage.local.set({language: lang, country: count});
 }
 
+function saveBeep(value) {
+	chrome.storage.local.set({beep: value});
+	console.log('beep>: ' + value);
+}
+
 function initialize() {
 	chrome.storage.local.get(['language', 'country'], function(result) {
 		if (result.language != null && result.country != null) {
@@ -39,6 +44,15 @@ function initialize() {
 		else {
 			saveLanguage('en', 'US');
 			addMenu('en', 'US');
+		}
+	});
+
+	chrome.storage.local.get('beep', function(result) {
+		if (result.beep) {
+			$('#sound').attr('checked', true);
+		}
+		else {
+			$('#sound').attr('checked', false);
 		}
 	});
 
@@ -77,6 +91,12 @@ function initialize() {
 			}
 
 			saveLanguage(lang, sel_coun);
+		}
+	);
+
+	$('#sound').change(
+		function() {
+			saveBeep($('#sound').is(':checked'));
 		}
 	);
 }
