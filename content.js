@@ -120,12 +120,14 @@ var updateCommentActions = function() {
 
 			commentId++;
 
-			txtArea.value = txtArea.placeholder;
 			txtArea.placeholder = 'Write or click on the mic and ' +
 				'start speaking...';
+			txtArea.value = txtArea.placeholder;
+			txtArea.title = txtArea.value;
 
 			txtArea.setAttribute('title', elms[i].placeholder);
 			txtArea.style.width = '92%';
+			txtArea.style.float = 'left';
 
 			var micInput = generateCommentMicInput(txtArea, commentId);
 			// Append the mic input node to the DOM
