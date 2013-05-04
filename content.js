@@ -1,6 +1,11 @@
 function hasClass(element, cls) {
 	return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
+
+function capitaliseFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // CHAT
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +46,14 @@ var generateIconSpot = function(iconSpot, chatId) {
 
 	element.addEventListener('webkitspeechchange', function(evt) {
 		fbBeep();
-		txtArea.value += evt.results[0].utterance + ' ';
+
+		if (txtArea.value.length == 0) {
+			txtArea.value += capitaliseFirstLetter(evt.results[0].utterance) + ' ';
+		}
+		else {
+			txtArea.value += evt.results[0].utterance + ' ';
+		}
+
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
@@ -131,7 +143,13 @@ var generateCommentMicInput = function(txtArea, commentId) {
 			txtArea.value = '';
 		}
 
-		txtArea.value += evt.results[0].utterance + ' ';
+		if (txtArea.value.length == 0) {
+			txtArea.value += capitaliseFirstLetter(evt.results[0].utterance) + ' ';
+		}
+		else {
+			txtArea.value += evt.results[0].utterance + ' ';
+		}
+
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
@@ -168,7 +186,7 @@ var generateGraphSearchMicInput = function(richInput) {
 		outputSpan.setAttribute('data-si', 'true');
 		richInput.appendChild(outputSpan);
 
-		outputSpan.innerHTML = evt.results[0].utterance;
+		outputSpan.innerHTML = capitaliseFirstLetter(evt.results[0].utterance);
 
 		$(richInput).attr('aria-expanded', 'true');
 		$(richInput).attr('aria-activedescendant', 'js_47');

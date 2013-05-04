@@ -33,7 +33,6 @@ function saveLanguage(lang, count) {
 
 function saveBeep(value) {
 	chrome.storage.local.set({beep: value});
-	console.log('beep>: ' + value);
 }
 
 function initialize() {
