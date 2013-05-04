@@ -143,23 +143,13 @@ var generateGraphSearchMicInput = function(richInput) {
 	element.className += 'fbspeech_input';
 
 	element.addEventListener('webkitspeechchange', function(evt) {
-		var outputSpan = null;
+		$(richInput).html('');
 
-		if (richInput.children) {
-			outputSpan = richInput.children[0];
+		outputSpan = document.createElement('span');
+		outputSpan.setAttribute('data-si', 'true');
+		richInput.appendChild(outputSpan);
 
-			if (outputSpan && outputSpan.tagName != 'span') {
-				outputSpan = null;
-			}
-		}
-
-		if (!outputSpan) {
-			outputSpan = document.createElement('span');
-			outputSpan.setAttribute('data-si', 'true');
-			richInput.appendChild(outputSpan);
-		}
-
-		outputSpan.innerHTML += evt.results[0].utterance + ' ';
+		outputSpan.innerHTML = evt.results[0].utterance;
 
 		$(richInput).attr('aria-expanded', 'true');
 		$(richInput).attr('aria-activedescendant', 'js_47');
@@ -195,7 +185,7 @@ var updateCommentActions = function() {
 				txtArea.value = txtArea.placeholder;
 				txtArea.title = txtArea.value;
 
-				txtArea.setAttribute('title', elms[i].placeholder);
+				txtArea.setAttribute('title', txtArea.value);
 				txtArea.style.width = '92%';
 				txtArea.style.float = 'left';
 
