@@ -26,7 +26,7 @@
 	},
 
 	"background": {
-		"persistent": false,
+		"persistent": true,
 		"scripts": ["language_selection.js"]
 	}
 }
