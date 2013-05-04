@@ -103,6 +103,36 @@ var generateCommentMicInput = function(txtArea, commentId) {
 	return element;
 }
 
+var generateGraphSearchMicInput = function(outputSpan) {
+	var element = document.createElement('input');
+	var elementStyle = 'width:15px; margin:auto 8px; height:30px; border:0px; '
+		+ 'background-color:transparent; float:right;';
+
+	if (!outputSpan) {
+		outputSpan = document.createElement('span');
+		outputSpan['data-si'] = 'true';
+		document.getElementsByClassName('structuredRich')[0]
+			.appendChild(outputSpan);
+	}
+
+	element.setAttribute('style', elementStyle);
+	element.setAttribute('id', 'mic_comment_' + commentId);
+	element.setAttribute('x-webkit-speech', '');
+	element.addEventListener('webkitspeechchange', function(evt) {
+		outputSpan.value += evt.results[0].utterance + ' ';
+		outputSpan.focus();
+		outputSpan.selectionStart = outputSpan.selectionEnd =
+			outputSpan.value.length;
+		evt.srcElement.value = '';
+	});
+
+	element.onfocus = function() {
+		outputSpan.focus();
+	}
+
+	return element;
+}
+
 var updateCommentActions = function() {
 	var elms = document.getElementsByClassName('innerWrap');
 
@@ -118,20 +148,33 @@ var updateCommentActions = function() {
 				continue;
 			}
 
-			commentId++;
+			if (txtArea.tagName == 'textarea') {
+				commentId++;
 
-			txtArea.placeholder = 'Write or click on the mic and ' +
-				'start speaking...';
-			txtArea.value = txtArea.placeholder;
-			txtArea.title = txtArea.value;
+				txtArea.placeholder = 'Write or click on the mic and ' +
+					'start speaking...';
+				txtArea.value = txtArea.placeholder;
+				txtArea.title = txtArea.value;
 
-			txtArea.setAttribute('title', elms[i].placeholder);
-			txtArea.style.width = '92%';
-			txtArea.style.float = 'left';
+				txtArea.setAttribute('title', elms[i].placeholder);
+				txtArea.style.width = '92%';
+				txtArea.style.float = 'left';
 
-			var micInput = generateCommentMicInput(txtArea, commentId);
-			// Append the mic input node to the DOM
-			elms[i].appendChild(micInput);
+				var micInput = generateCommentMicInput(txtArea, commentId);
+				// Append the mic input node to the DOM
+				elms[i].appendChild(micInput);
+			}
+			else {
+				// Graph Search input
+				var richInput =
+					document.getElementsByClassName('structuredRich')[0];
+				richInput.style.float = 'left';
+
+				var outputSpan = richInput.children[0];
+				var micInput = generateGraphSearchMicInput(outputSpan);
+
+				$(txtArea).prepend(micInput);
+			}
 		}
 	}
 }
