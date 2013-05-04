@@ -79,17 +79,6 @@ function initialize() {
 			saveLanguage(lang, sel_coun);
 		}
 	);
-
-	// Reloads all Facebook pages in order to change the language
-	chrome.storage.onChanged.addListener(
-		function(changes, namespace) {
-			chrome.tabs.query({url: '*://*.facebook.com/*'}, function(tabs) {
-				for (var i = 0; i < tabs.length; ++i) {
-					chrome.tabs.reload(tabs[i].id);
-				}
-			});
-		}
-	);
 }
 
 document.addEventListener('DOMContentLoaded', initialize);

@@ -32,6 +32,8 @@ var generateIconSpot = function(iconSpot, chatId) {
 	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_' + chatId);
 	element.setAttribute('x-webkit-speech', '');
+	element.setAttribute('lang', configs.language);
+	element.className += 'fbspeech_input';
 
 	element.addEventListener('webkitspeechchange', function(evt) {
 		txtArea.value += evt.results[0].utterance + ' ';
@@ -80,8 +82,8 @@ var updateChatActions = function() {
 var loadLanguage = function() {
 	chrome.storage.local.get(['language', 'country'], function(result) {
 		configs.language = result.language + '-' + result.country;
+		$('.fbspeech_input').attr('lang', configs.language);
 	});
-
 }
 
 var loadConfigs = function() {
@@ -102,6 +104,9 @@ var generateCommentMicInput = function(txtArea, commentId) {
 	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_comment_' + commentId);
 	element.setAttribute('x-webkit-speech', '');
+	element.setAttribute('lang', configs.language);
+	element.className += 'fbspeech_input';
+
 	element.addEventListener('webkitspeechchange', function(evt) {
 		if (hasClass(txtArea, 'DOMControl_placeholder')) {
 			txtArea.className =
@@ -134,6 +139,9 @@ var generateGraphSearchMicInput = function(richInput) {
 	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_comment_' + commentId);
 	element.setAttribute('x-webkit-speech', '');
+	element.setAttribute('lang', configs.language);
+	element.className += 'fbspeech_input';
+
 	element.addEventListener('webkitspeechchange', function(evt) {
 		var outputSpan = null;
 
@@ -149,7 +157,6 @@ var generateGraphSearchMicInput = function(richInput) {
 			outputSpan = document.createElement('span');
 			outputSpan.setAttribute('data-si', 'true');
 			richInput.appendChild(outputSpan);
-			console.log(outputSpan);
 		}
 
 		outputSpan.innerHTML += evt.results[0].utterance + ' ';
@@ -159,7 +166,6 @@ var generateGraphSearchMicInput = function(richInput) {
 
 		dispatchAKeyEvent(richInput);
 
-		console.log($(outputSpan));
 		evt.srcElement.value = '';
 	});
 
@@ -230,8 +236,6 @@ var init = function() {
 		return;
 	}
 
-	loadConfigs();
-
 	// Listens for node insertions on chat dock DOM to search for a new chat
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
  		updateChatActions();
@@ -242,6 +246,17 @@ var init = function() {
  	});
 
  	updateCommentActions();
+
+ 	// Update the language attribute of all speech inputs
+	chrome.storage.onChanged.addListener(
+		function(changes, namespace) {
+			loadConfigs();
+			$('.fbspeech_input').attr('lang', configs.language);
+		}
+	);
+
+	// Initialize the selected language
+	loadConfigs();
 }
 
 init();
