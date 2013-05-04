@@ -33,7 +33,7 @@ function saveLanguage(lang, count) {
 
 function initialize() {
 	chrome.storage.local.get(['language', 'country'], function(result) {
-		if (result.language && result.country) {
+		if (result.language != null && result.country != null) {
 			addMenu(result.language, result.country);
 		}
 		else {
@@ -81,4 +81,4 @@ function initialize() {
 	);
 }
 
-document.addEventListener('DOMContentLoaded', initialize);
+$(document).ready(initialize);

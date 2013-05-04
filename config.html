@@ -1,29 +1,61 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset="utf-8" />
+		<title>blue</title>
+		<link href="http://fonts.googleapis.com/css?family=Cantarell:regular,italic,bold,bolditalic" rel="stylesheet" />
+		<link href="http://fonts.googleapis.com/css?family=Droid+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+
 		<style>
 			body{
 				padding : 10px;
 				min-width: 220px;
 				min-height: 60px;
 				overflow-x: hidden;
+				font-family: "Lucida Grande",sans-serif;
+				font-size: 12pt;
+				color:#3b5998;
 			}
+			table {
+				border-width: 0pt;
+				cellspacing: 0pt;
+			}
+			h4 {
+				color:#3b5998;
+			}
+			
 		</style>
-		<script src="jquery-2.0.0.min.js"></script>
+		<script  src="jquery-2.0.0.min.js"></script>
 		<script src="language_selection.js"></script>
 	</head>
 	<body>
-		<b>Chose your language:</b><br/>
-		<select id="languages">
-			<option id="en" value="en">English</option>
-			<option id="es" value="es">Español</option>
-			<option id="pt" value="pt">Português</option>
-		</select>
 
-		<select id="countries">
-
-		</select>
-
+			<h4>Choose your idiom</h4>
+			
+			<table>
+				
+				<tr>
+					<td>
+						<label for="languages">Language</label>
+					</td>
+					<td>
+						<select id="languages" style="min-width:120px">
+							<option id="en" value="en">English</option>
+							<option id="es" value="es">Español</option>
+							<option id="pt" value="pt">Português</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="countries">Country</label>
+					</td>
+					<td>
+						<select id="countries" style="min-width:120px">
+						</select>	
+					</td>
+				</tr>
+			</table>
+		
 	</body>
 </html>
