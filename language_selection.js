@@ -1,84 +1,95 @@
 var options = [];
-options["en"] = { op1 : { value : "US", innerHTML : "United States" }, op2 : { value : "GB", innerHTML : "United Kingdom" } };
-options["es"] = { op1 : { value : "ES", innerHTML : "Spaña" },         op2 : { value : "AR", innerHTML : "Argentina" } };
-options["pt"] = { op1 : { value : "BR", innerHTML : "Brasil" },        op2 : { value : "PT", innerHTML : "Portugal" } };
+options['en'] = { op1 : { value : 'US', innerHTML : 'United States' }, op2 : { value : 'GB', innerHTML : 'United Kingdom' } };
+options['es'] = { op1 : { value : 'ES', innerHTML : 'Spaña' },         op2 : { value : 'AR', innerHTML : 'Argentina' } };
+options['pt'] = { op1 : { value : 'BR', innerHTML : 'Brasil' },        op2 : { value : 'PT', innerHTML : 'Portugal' } };
 
-function addMenu( lang, sel_coun ){
-	
-	var op1 = document.createElement("option");
+function addMenu(lang, sel_coun) {
+	var op1 = document.createElement('option');
 	op1.value = options[lang].op1.value;
 	op1.innerHTML = options[lang].op1.innerHTML;
-	
-	var op2 = document.createElement("option");
+
+	var op2 = document.createElement('option');
 	op2.value = options[lang].op2.value;
 	op2.innerHTML = options[lang].op2.innerHTML;
-	
-	if( sel_coun == "US" || sel_coun == "ES" || sel_coun == "BR" ) op1.selected = "selected";
-	else op2.selected = "selected";
-	
-	document.getElementById(lang).selected = "selected";
-	
-	var countries = document.getElementById("countries");
-	countries.innerHTML = "";
-	countries.appendChild( op1 );
-	countries.appendChild( op2 );
-	
+
+	if (sel_coun == 'US' || sel_coun == 'ES' || sel_coun == 'BR') {
+		op1.selected = 'selected';
+	}
+	else {
+		op2.selected = 'selected';
+	}
+
+	document.getElementById(lang).selected = 'selected';
+
+	var countries = document.getElementById('countries');
+	countries.innerHTML = '';
+	countries.appendChild(op1);
+	countries.appendChild(op2);
 }
 
-function saveLanguage( lang, count ){
-	chrome.storage.local.set( 
-		{ language: lang, country: count }, 
-		function(){
-		}
-	);
+function saveLanguage(lang, count) {
+	chrome.storage.local.set({language: lang, country: count});
 }
 
-function initialize(){
-	
-	chrome.storage.local.get( ['language', 'country'], function(result){
-		if( result.language && result.country ){
-			addMenu( result.language, result.country );
+function initialize() {
+	chrome.storage.local.get(['language', 'country'], function(result) {
+		if (result.language && result.country) {
+			addMenu(result.language, result.country);
 		}
-		else{
-			saveLanguage( "en", "US" );
-			addMenu( "en", "US" );
+		else {
+			saveLanguage('en', 'US');
+			addMenu('en', 'US');
 		}
 	});
-	
-	$("#languages").change(
-		function () {
+
+	$('#languages').change(
+		function() {
 			var lang = $(this).val();
-			switch( lang ){
+			switch (lang) {
 				case 'en':
-					saveLanguage("en", "US");
-					addMenu( "en", "US" );
+					saveLanguage('en', 'US');
+					addMenu('en', 'US');
 					break;
 				case 'es':
-					saveLanguage("es", "ES");
-					addMenu( "es", "ES" );
+					saveLanguage('es', 'ES');
+					addMenu('es', 'ES');
 					break;
 				case 'pt':
-					saveLanguage("pt", "BR");
-					addMenu( "pt", "BR" );
+					saveLanguage('pt', 'BR');
+					addMenu('pt', 'BR');
 					break;
 			}
 		}
 	);
 
 	$('#countries').change(
-		function () {
+		function() {
 			var sel_coun = $(this).val();
 			var lang;
-			if( sel_coun == "US" || sel_coun == "GB" )
-				lang = "en";
-			else if( sel_coun == "ES" || sel_coun == "AR" )
-				lang = "es";
-			else
-				lang = "pt";
-			
-			saveLanguage( lang, sel_coun );
+			if (sel_coun == 'US' || sel_coun == 'GB') {
+				lang = 'en';
+			}
+			else if (sel_coun == 'ES' || sel_coun == 'AR') {
+				lang = 'es';
+			}
+			else {
+				lang = 'pt';
+			}
+
+			saveLanguage(lang, sel_coun);
+		}
+	);
+
+	// Reloads all Facebook pages in order to change the language
+	chrome.storage.onChanged.addListener(
+		function(changes, namespace) {
+			chrome.tabs.query({url: '*://*.facebook.com/*'}, function(tabs) {
+				for (var i = 0; i < tabs.length; ++i) {
+					chrome.tabs.reload(tabs[i].id);
+				}
+			});
 		}
 	);
 }
 
-document.addEventListener( 'DOMContentLoaded', initialize );
+document.addEventListener('DOMContentLoaded', initialize);

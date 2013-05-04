@@ -77,12 +77,11 @@ var updateChatActions = function() {
 	}
 }
 
-var loadLanguage = function(){
-	chrome.storage.local.get( ['language', 'country'], function(result){
-		configs.language = result.language + "-" + result.country;
-		//alert( configs.language );
+var loadLanguage = function() {
+	chrome.storage.local.get(['language', 'country'], function(result) {
+		configs.language = result.language + '-' + result.country;
 	});
-	
+
 }
 
 var loadConfigs = function() {
@@ -230,15 +229,9 @@ var init = function() {
 		setTimeout(init, 500);
 		return;
 	}
-	
-	chrome.storage.onChanged.addListener(
-		function( changes, namespace ){
-			loadLanguage();
-		}
-	)
-	
+
 	loadConfigs();
-	
+
 	// Listens for node insertions on chat dock DOM to search for a new chat
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
  		updateChatActions();
