@@ -64,8 +64,8 @@ function initialize(){
 			}
 		}
 	);
-	
-	$("#countries").change(
+
+	$('#countries').change(
 		function () {
 			var sel_coun = $(this).val();
 			var lang;

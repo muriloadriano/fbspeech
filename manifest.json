@@ -16,7 +16,7 @@
 			"matches": [
 				"*://*.facebook.com/*"
 			],
-			"js": ["content.js"],
+			"js": ["jquery-2.0.0.min.js","content.js","key_events.js"],
 			"run_at": "document_end"
 	}],
 

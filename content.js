@@ -1,8 +1,8 @@
-// Helper used to see if an element implements a class
 function hasClass(element, cls) {
 	return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+// CHAT
 ////////////////////////////////////////////////////////////////////////////////
 var configs = {};
 
@@ -32,11 +32,18 @@ var generateIconSpot = function(iconSpot, chatId) {
 	element.setAttribute('style', elementStyle);
 	element.setAttribute('id', 'mic_' + chatId);
 	element.setAttribute('x-webkit-speech', '');
+
 	element.addEventListener('webkitspeechchange', function(evt) {
 		txtArea.value += evt.results[0].utterance + ' ';
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
+
+		// Scroll textarea
+		txtArea.scrollTop = txtArea.scrollHeight;
+
+		// Dispath a key event in text area
+		dispatchAKeyEvent(txtArea);
 	});
 
 	element.onfocus = function() {
@@ -45,6 +52,7 @@ var generateIconSpot = function(iconSpot, chatId) {
 
 	iconSpot.insertBefore(element, iconSpot.childNodes[0]);
 }
+
 
 var updateChatActions = function() {
 	var elms = fbDockChat.getElementsByClassName('fbNubFlyoutFooter _552j');
@@ -81,6 +89,138 @@ var loadConfigs = function() {
 	loadLanguage();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// COMMENT
+////////////////////////////////////////////////////////////////////////////////
+
+var commentId = 0;
+
+var generateCommentMicInput = function(txtArea, commentId) {
+	var element = document.createElement('input');
+	var elementStyle = 'width:15px; height:22px; border:0px; ' +
+		'background-color:transparent; float:right;';
+
+	element.setAttribute('style', elementStyle);
+	element.setAttribute('id', 'mic_comment_' + commentId);
+	element.setAttribute('x-webkit-speech', '');
+	element.addEventListener('webkitspeechchange', function(evt) {
+		if (hasClass(txtArea, 'DOMControl_placeholder')) {
+			txtArea.className =
+				txtArea.className.replace('DOMControl_placeholder', '');
+
+			txtArea.value = '';
+		}
+
+		txtArea.value += evt.results[0].utterance + ' ';
+		txtArea.focus();
+		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
+		evt.srcElement.value = '';
+
+		// Scroll textarea
+		txtArea.scrollTop = txtArea.scrollHeight;
+	});
+
+	element.onfocus = function() {
+		txtArea.focus();
+	}
+
+	return element;
+}
+
+var generateGraphSearchMicInput = function(richInput) {
+	var element = document.createElement('input');
+	var elementStyle = 'width:15px; margin:auto 8px; height:30px; border:0px; '
+		+ 'background-color:transparent; float:right;';
+
+	element.setAttribute('style', elementStyle);
+	element.setAttribute('id', 'mic_comment_' + commentId);
+	element.setAttribute('x-webkit-speech', '');
+	element.addEventListener('webkitspeechchange', function(evt) {
+		var outputSpan = null;
+
+		if (richInput.children) {
+			outputSpan = richInput.children[0];
+
+			if (outputSpan && outputSpan.tagName != 'span') {
+				outputSpan = null;
+			}
+		}
+
+		if (!outputSpan) {
+			outputSpan = document.createElement('span');
+			outputSpan.setAttribute('data-si', 'true');
+			richInput.appendChild(outputSpan);
+			console.log(outputSpan);
+		}
+
+		outputSpan.innerHTML += evt.results[0].utterance + ' ';
+
+		$(richInput).attr('aria-expanded', 'true');
+		$(richInput).attr('aria-activedescendant', 'js_47');
+
+		dispatchAKeyEvent(richInput);
+
+		console.log($(outputSpan));
+		evt.srcElement.value = '';
+	});
+
+	return element;
+}
+
+var updateCommentActions = function() {
+	var elms = document.getElementsByClassName('innerWrap');
+
+	for (var i = 0; i < elms.length; ++i) {
+		if (!hasClass(elms[i], 'fbspeech_tag')) {
+			elms[i].className += ' fbspeech_tag';
+
+			// Get the comment area
+			var txtArea = elms[i].children[0];
+
+			if (hasClass(txtArea, 'inputsearch')) {
+				// @TODO(muriloadriano): add support for search textarea
+				continue;
+			}
+
+			if (txtArea.tagName == 'textarea') {
+				commentId++;
+
+				txtArea.placeholder = 'Write or click on the mic and ' +
+					'start speaking...';
+				txtArea.value = txtArea.placeholder;
+				txtArea.title = txtArea.value;
+
+				txtArea.setAttribute('title', elms[i].placeholder);
+				txtArea.style.width = '92%';
+				txtArea.style.float = 'left';
+
+				var micInput = generateCommentMicInput(txtArea, commentId);
+				// Append the mic input node to the DOM
+				elms[i].appendChild(micInput);
+			}
+			else {
+				// Graph Search input
+				var richInput = $('.structuredRich:first', $(elms[i])).get();
+					//elms[i].getElementsByClassName('structuredRich')[0];
+
+				if (!richInput.length) return;
+
+				richInput = richInput[0];
+				//var inputArea = $('input[name=q]',
+				//	$(txtArea.children[0])).get()[0];
+
+				var micInput = generateGraphSearchMicInput(richInput);
+
+				if (txtArea.children[0]) {
+					txtArea.children[0].style.width = '95%';
+				}
+
+				$(txtArea).prepend(micInput);
+			}
+		}
+	}
+}
+
 var init = function() {
 	fbDockChat = document.getElementById('fbDockChat');
 
@@ -102,6 +242,12 @@ var init = function() {
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
  		updateChatActions();
  	});
+
+ 	document.addEventListener('DOMNodeInserted', function(event) {
+ 		updateCommentActions();
+ 	});
+
+ 	updateCommentActions();
 }
 
 init();
