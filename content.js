@@ -82,7 +82,7 @@ var commentId = 0;
 
 var generateCommentMicInput = function(txtArea, commentId) {
 	var element = document.createElement('input');
-	var elementStyle = 'width:15px; height:22px; border:0px; ' +
+	var elementStyle = 'width:15px; height:16px; border:0px; ' +
 		'background-color:transparent; float:right;';
 
 	element.setAttribute('style', elementStyle);
@@ -167,7 +167,7 @@ var updateCommentActions = function() {
 				continue;
 			}
 
-			if (txtArea.tagName == 'textarea') {
+			if (txtArea.tagName == 'TEXTAREA') {
 				commentId++;
 
 				txtArea.placeholder = 'Write or click on the mic and ' +
@@ -191,8 +191,9 @@ var updateCommentActions = function() {
 				if (!richInput.length) return;
 
 				richInput = richInput[0];
-				//var inputArea = $('input[name=q]',
-				//	$(txtArea.children[0])).get()[0];
+				var placeholder = $('.structuredPlaceholder', $(elms[i])).get();
+				placeholder[0].innerHTML =
+					'Type or speak out to search for people, places and things';
 
 				var micInput = generateGraphSearchMicInput(richInput);
 
