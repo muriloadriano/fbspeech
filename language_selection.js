@@ -1,7 +1,7 @@
 var options = [];
-options['en'] = { op1 : { value : 'US', innerHTML : 'United States' }, op2 : { value : 'GB', innerHTML : 'United Kingdom' } };
-options['es'] = { op1 : { value : 'ES', innerHTML : 'Spaña' },         op2 : { value : 'AR', innerHTML : 'Argentina' } };
-options['pt'] = { op1 : { value : 'BR', innerHTML : 'Brasil' },        op2 : { value : 'PT', innerHTML : 'Portugal' } };
+options['en'] = {op1 : {value : 'US', innerHTML : 'United States'}, op2 : {value : 'GB', innerHTML : 'United Kingdom'}};
+options['es'] = {op1 : {value : 'ES', innerHTML : 'Spaña'},         op2 : {value : 'AR', innerHTML : 'Argentina'}};
+options['pt'] = {op1 : {value : 'BR', innerHTML : 'Brasil'},        op2 : {value : 'PT', innerHTML : 'Portugal'}};
 
 function addMenu(lang, sel_coun) {
 	var op1 = document.createElement('option');

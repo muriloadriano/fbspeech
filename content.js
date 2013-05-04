@@ -120,6 +120,8 @@ var generateCommentMicInput = function(txtArea, commentId) {
 
 		// Scroll textarea
 		txtArea.scrollTop = txtArea.scrollHeight;
+
+		dispatchAKeyEvent(txtArea);
 	});
 
 	element.onfocus = function() {
