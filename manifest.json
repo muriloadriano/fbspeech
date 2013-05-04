@@ -25,6 +25,10 @@
 		"default_popup": "config.html"
 	},
 
+	"icons": {
+		"128": "icon.png"
+	},
+
 	"background": {
 		"persistent": false,
 		"scripts": ["language_selection.js"]
