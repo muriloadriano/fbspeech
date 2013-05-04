@@ -4,6 +4,8 @@ function hasClass(element, cls) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// CHAT
+////////////////////////////////////////////////////////////////////////////////
 
 // This variable holds the container of the chat windows
 var fbDockChat;
@@ -66,6 +68,72 @@ var updateChatActions = function() {
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// COMMENT
+////////////////////////////////////////////////////////////////////////////////
+
+var commentId = 0;
+
+var generateCommentMicInput = function(txtArea, commentId) {
+	var element = document.createElement('input');
+	var elementStyle = 'width:15px; height:22px; border:0px; ' +
+		'background-color:transparent; float:right;';
+
+	element.setAttribute('style', elementStyle);
+	element.setAttribute('id', 'mic_comment_' + commentId);
+	element.setAttribute('x-webkit-speech', '');
+	element.addEventListener('webkitspeechchange', function(evt) {
+		if (hasClass(txtArea, 'DOMControl_placeholder')) {
+			txtArea.className =
+				txtArea.className.replace('DOMControl_placeholder', '');
+
+			txtArea.value = '';
+		}
+
+		txtArea.value += evt.results[0].utterance + ' ';
+		txtArea.focus();
+		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
+		evt.srcElement.value = '';
+	});
+
+	element.onfocus = function() {
+		txtArea.focus();
+	}
+
+	return element;
+}
+
+var updateCommentActions = function() {
+	var elms = document.getElementsByClassName('innerWrap');
+
+	for (var i = 0; i < elms.length; ++i) {
+		if (!hasClass(elms[i], 'fbspeech_tag')) {
+			elms[i].className += ' fbspeech_tag';
+
+			// Get the comment area
+			var txtArea = elms[i].children[0];
+
+			if (hasClass(txtArea, 'inputsearch')) {
+				// @TODO(muriloadriano): add support for search textarea
+				continue;
+			}
+
+			commentId++;
+
+			txtArea.value = txtArea.placeholder;
+			txtArea.placeholder = 'Write or click on the mic and ' +
+				'start speaking...';
+
+			txtArea.setAttribute('title', elms[i].placeholder);
+			txtArea.style.width = '92%';
+
+			var micInput = generateCommentMicInput(txtArea, commentId);
+			// Append the mic input node to the DOM
+			elms[i].appendChild(micInput);
+		}
+	}
+}
+
 var init = function() {
 	fbDockChat = document.getElementById('fbDockChat');
 
@@ -79,6 +147,12 @@ var init = function() {
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
  		updateChatActions();
  	});
+
+ 	document.addEventListener('DOMNodeInserted', function(event) {
+ 		updateCommentActions();
+ 	});
+
+ 	updateCommentActions();
 }
 
 init();
