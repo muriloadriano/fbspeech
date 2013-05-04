@@ -100,4 +100,6 @@ function initialize() {
 	);
 }
 
-$(document).ready(initialize);
+$(document).ready(function() {
+	initialize();
+});
