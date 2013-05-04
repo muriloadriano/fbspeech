@@ -38,6 +38,9 @@ var generateIconSpot = function(iconSpot, chatId) {
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
+
+		// Scroll textarea 
+		txtArea.scrollTop = txtArea.scrollHeight;
 	});
 
 	element.onfocus = function() {
@@ -94,6 +97,9 @@ var generateCommentMicInput = function(txtArea, commentId) {
 		txtArea.focus();
 		txtArea.selectionStart = txtArea.selectionEnd = txtArea.value.length;
 		evt.srcElement.value = '';
+
+		// Scroll textarea 
+		txtArea.scrollTop = txtArea.scrollHeight;
 	});
 
 	element.onfocus = function() {
