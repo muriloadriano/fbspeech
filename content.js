@@ -65,8 +65,6 @@ var updateChatActions = function() {
 			elms[i].className += ' fbspeech_tag';
 			chatId++;
 
-
-
 			// Make the needed changes to the chat's textarea
 			var txt = getTextArea(elms[i]);
 			txt.setAttribute('id', 'fbspeech_' + chatId);
