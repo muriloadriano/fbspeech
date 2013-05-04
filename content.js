@@ -4,6 +4,7 @@ function hasClass(element, cls) {
 ////////////////////////////////////////////////////////////////////////////////
 // CHAT
 ////////////////////////////////////////////////////////////////////////////////
+var configs = {};
 
 // This variable holds the container of the chat windows
 var fbDockChat;
@@ -62,6 +63,8 @@ var updateChatActions = function() {
 			elms[i].className += ' fbspeech_tag';
 			chatId++;
 
+
+
 			// Make the needed changes to the chat's textarea
 			var txt = getTextArea(elms[i]);
 			txt.setAttribute('id', 'fbspeech_' + chatId);
@@ -72,6 +75,18 @@ var updateChatActions = function() {
 			generateIconSpot(iconSpot, chatId, txt);
 		}
 	}
+}
+
+var loadLanguage = function(){
+	chrome.storage.local.get( ['language', 'country'], function(result){
+		configs.language = result.language + "-" + result.country;
+		//alert( configs.language );
+	});
+	
+}
+
+var loadConfigs = function() {
+	loadLanguage();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +230,15 @@ var init = function() {
 		setTimeout(init, 500);
 		return;
 	}
-
+	
+	chrome.storage.onChanged.addListener(
+		function( changes, namespace ){
+			loadLanguage();
+		}
+	)
+	
+	loadConfigs();
+	
 	// Listens for node insertions on chat dock DOM to search for a new chat
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
  		updateChatActions();

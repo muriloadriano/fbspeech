@@ -1,90 +1,84 @@
-var selected_language = 'en-US';
+var options = [];
+options["en"] = { op1 : { value : "US", innerHTML : "United States" }, op2 : { value : "GB", innerHTML : "United Kingdom" } };
+options["es"] = { op1 : { value : "ES", innerHTML : "Spaña" },         op2 : { value : "AR", innerHTML : "Argentina" } };
+options["pt"] = { op1 : { value : "BR", innerHTML : "Brasil" },        op2 : { value : "PT", innerHTML : "Portugal" } };
 
-function addEnglishMenu() {
-	var op1 = document.createElement('option');
-	op1.value = 'en-US';
-	op1.innerHTML = 'United States';
-
-	var op2 = document.createElement('option');
-	op2.value = 'en-GB';
-	op2.innerHTML = 'United Kingdom';
-
-	var countries = document.getElementById('countries');
-	countries.innerHTML = '';
+function addMenu( lang, sel_coun ){
+	
+	var op1 = document.createElement("option");
+	op1.value = options[lang].op1.value;
+	op1.innerHTML = options[lang].op1.innerHTML;
+	
+	var op2 = document.createElement("option");
+	op2.value = options[lang].op2.value;
+	op2.innerHTML = options[lang].op2.innerHTML;
+	
+	if( sel_coun == "US" || sel_coun == "ES" || sel_coun == "BR" ) op1.selected = "selected";
+	else op2.selected = "selected";
+	
+	document.getElementById(lang).selected = "selected";
+	
+	var countries = document.getElementById("countries");
+	countries.innerHTML = "";
 	countries.appendChild( op1 );
 	countries.appendChild( op2 );
-
+	
 }
 
-function addSpanishMenu() {
-	var op1 = document.createElement('option');
-	op1.value = 'es-ES';
-	op1.innerHTML = 'Spaña';
-
-	var op2 = document.createElement('option');
-	op2.value = 'es-AR';
-	op2.innerHTML = 'Argentina';
-
-	var countries = document.getElementById('countries');
-	countries.innerHTML = '';
-	countries.appendChild( op1 );
-	countries.appendChild( op2 );
+function saveLanguage( lang, count ){
+	chrome.storage.local.set( 
+		{ language: lang, country: count }, 
+		function(){
+		}
+	);
 }
 
-function addPortugueseMenu() {
-	var op1 = document.createElement('option');
-	op1.value = 'pt-BR';
-	op1.innerHTML = 'Brasil';
-
-	var op2 = document.createElement('option');
-	op2.value = 'pt-PT';
-	op2.innerHTML = 'Portugal';
-
-	var countries = document.getElementById('countries');
-	countries.innerHTML = '';
-	countries.appendChild( op1 );
-	countries.appendChild( op2 );
-}
-
-function saveLanguage() {
-	chrome.storage.local.set( { 'lang': selected_language } );
-
-	var lang = '';
-	chrome.storage.local.get('lang', function(result){
-		lang = result.lang;
-		alert(lang);
+function initialize(){
+	
+	chrome.storage.local.get( ['language', 'country'], function(result){
+		if( result.language && result.country ){
+			addMenu( result.language, result.country );
+		}
+		else{
+			saveLanguage( "en", "US" );
+			addMenu( "en", "US" );
+		}
 	});
-}
-
-function initialize() {
-	$('#languages').change(
-		function() {
+	
+	$("#languages").change(
+		function () {
 			var lang = $(this).val();
 			switch( lang ){
-				case 'english':
-					selected_language = 'en-US';
-					addEnglishMenu();
+				case 'en':
+					saveLanguage("en", "US");
+					addMenu( "en", "US" );
 					break;
-				case 'spanish':
-					selected_language = 'sp-SP';
-					addSpanishMenu();
+				case 'es':
+					saveLanguage("es", "ES");
+					addMenu( "es", "ES" );
 					break;
-				case 'portuguese':
-					selected_language = 'pt-BR';
-					addPortugueseMenu();
+				case 'pt':
+					saveLanguage("pt", "BR");
+					addMenu( "pt", "BR" );
 					break;
 			}
-			saveLanguage();
 		}
 	);
 
 	$('#countries').change(
 		function () {
-			selected_language = $(this).val();
-			saveLanguage();
+			var sel_coun = $(this).val();
+			var lang;
+			if( sel_coun == "US" || sel_coun == "GB" )
+				lang = "en";
+			else if( sel_coun == "ES" || sel_coun == "AR" )
+				lang = "es";
+			else
+				lang = "pt";
+			
+			saveLanguage( lang, sel_coun );
 		}
 	);
-
 }
 
-document.addEventListener('DOMContentLoaded', initialize);
+document.addEventListener( 'DOMContentLoaded', initialize );
