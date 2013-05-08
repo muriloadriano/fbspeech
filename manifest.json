@@ -14,7 +14,7 @@
 			"matches": [
 				"*://*.facebook.com/*"
 			],
-			"js": ["jquery-2.0.0.min.js","content.js", "key_events.js"],
+			"js": ["jquery-2.0.0.min.js", "content.js", "key_events.js"],
 			"run_at": "document_end"
 	}],
 
@@ -25,10 +25,5 @@
 
 	"icons": {
 		"128": "icon.png"
-	},
-
-	"background": {
-		"persistent": false,
-		"scripts": ["language_selection.js"]
 	}
 }

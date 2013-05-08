@@ -60,19 +60,18 @@ options['ru'] = [{value : 'RU', innerHTML : '---'}];
 options['sr'] = [{value : 'ESRS', innerHTML : '---'}];
 
 function addMenu(lang, sel_coun) {
-	//alert( lang + "-" + sel_coun );
-	document.getElementById(lang).selected = 'selected';
 	var countries = document.getElementById('countries');
 	countries.innerHTML = '';
-	for( var i = 0; i < options[lang].length; ++i ){
+	for (var i = 0; i < options[lang].length; ++i) {
 		var tag_option = document.createElement('option');
 		tag_option.value = options[lang][i].value;
 		tag_option.innerHTML = options[lang][i].innerHTML;
-		if( options[lang][i].value == sel_coun ){
+		if (options[lang][i].value == sel_coun) {
 			tag_option.selected = "selected";
 		}
 
 		countries.appendChild(tag_option);
+		document.getElementById(lang).selected = 'selected';
 	}
 }
 
@@ -129,4 +128,4 @@ function initialize() {
 	);
 }
 
-document.addEventListener('DOMContentLoaded', initialize);
+$(document).ready(initialize);

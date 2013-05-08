@@ -42,11 +42,8 @@ var generateIconSpot = function(iconSpot, chatId) {
 	element.setAttribute('x-webkit-speech', '');
 	element.setAttribute('lang', configs.language);
 	element.className += 'fbspeech_input';
-	element.addEventListener('click', fbBeep);
 
 	element.addEventListener('webkitspeechchange', function(evt) {
-		fbBeep();
-
 		if (txtArea.value.length == 0) {
 			txtArea.value += capitaliseFirstLetter(evt.results[0].utterance) + ' ';
 		}
@@ -259,7 +256,7 @@ var updateCommentActions = function() {
 }
 
 var init = function() {
-	fbDockChat = document.getElementById('fbDockChat');
+	fbDockChat = document.getElementById('ChatTabsPagelet');
 
 	// If the chat dock wasn't fully loaded, try again in 500 msecs
 	if (!fbDockChat) {
@@ -269,16 +266,20 @@ var init = function() {
 
 	// Listens for node insertions on chat dock DOM to search for a new chat
 	fbDockChat.addEventListener('DOMNodeInserted', function(event) {
- 		updateChatActions();
- 	});
+		updateChatActions();
+	});
 
- 	document.addEventListener('DOMNodeInserted', function(event) {
- 		updateCommentActions();
- 	});
+	document.addEventListener('DOMNodeInserted', function(event) {
+		updateCommentActions();
+	});
 
- 	updateCommentActions();
+	// Initializes all comment fields with mics
+	updateCommentActions();
 
- 	// Update the language attribute of all speech inputs
+	// Put the microphone in the chat windows already opened
+	updateChatActions();
+
+	// Update the language attribute of all speech inputs
 	chrome.storage.onChanged.addListener(
 		function(changes, namespace) {
 			loadConfigs();
@@ -292,10 +293,11 @@ var init = function() {
 	audioElement.setAttribute('id', 'fbspeech_audio');
 	audioElement.load();
 
+	// Adds our beep element
 	document.body.appendChild(audioElement);
 
 	// Initialize the selected language
 	loadConfigs();
 }
 
-init();
+$(document).ready(init);
